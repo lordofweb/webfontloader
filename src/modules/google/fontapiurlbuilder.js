@@ -15,7 +15,7 @@ webfont.modules.google.FontApiUrlBuilder = function(apiUrl, text) {
 };
 
 
-webfont.modules.google.FontApiUrlBuilder.DEFAULT_API_URL = 'https://fonts.googleapis.com/css';
+webfont.modules.google.FontApiUrlBuilder.DEFAULT_API_URL = 'https://fonts.googleapis.com/css2';
 
 goog.scope(function () {
   var FontApiUrlBuilder = webfont.modules.google.FontApiUrlBuilder;
@@ -57,19 +57,21 @@ goog.scope(function () {
       return this.apiUrl_;
     }
     var length = this.fontFamilies_.length;
-    var sb = [];
+
+    // Build URL for Google Fonts API v2
+    // Use &family= for each font instead of | separator
+    var url = this.apiUrl_ + '?';
 
     for (var i = 0; i < length; i++) {
-      sb.push(this.webSafe(this.fontFamilies_[i]));
+      url += 'family=' + this.webSafe(this.fontFamilies_[i]) + '&';
     }
-    var url = this.apiUrl_ + '?family=' + sb.join('%7C'); // '|' escaped.
 
     if (this.subsets_.length > 0) {
-      url += '&subset=' + this.subsets_.join(',');
+      url += 'subset=' + this.subsets_.join(',') + '&';
     }
 
     if (this.text_.length > 0) {
-      url += '&text=' + encodeURIComponent(this.text_);
+      url += 'text=' + encodeURIComponent(this.text_) + '&';
     }
 
     return url;
